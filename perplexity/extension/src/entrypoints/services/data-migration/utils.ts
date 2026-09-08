@@ -45,7 +45,9 @@ function buildModernPluginSettingsItems(
 
       return {
         storageItem: settingsStorage.storageItem,
-        settings: settingsStorage.normalizeValue(settings),
+        settings: settingsStorage.normalizeValue(
+          settings as Parameters<typeof settingsStorage.normalizeValue>[0],
+        ),
         meta,
       };
     });
@@ -64,7 +66,9 @@ function buildLegacyPluginSettingsItems(
 
       return {
         storageItem: settingsStorage.storageItem,
-        settings: settingsStorage.normalizeValue(settings),
+        settings: settingsStorage.normalizeValue(
+          settings as Parameters<typeof settingsStorage.normalizeValue>[0],
+        ),
         meta: {},
       };
     });
