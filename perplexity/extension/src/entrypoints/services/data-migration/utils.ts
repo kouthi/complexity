@@ -41,9 +41,11 @@ function buildModernPluginSettingsItems(
       const typedPluginId = pluginId as Parameters<
         typeof getPluginSettingsStorage
       >[0];
+      const settingsStorage = getPluginSettingsStorage(typedPluginId);
+
       return {
-        storageItem: getPluginSettingsStorage(typedPluginId).storageItem,
-        settings,
+        storageItem: settingsStorage.storageItem,
+        settings: settingsStorage.normalizeValue(settings),
         meta,
       };
     });
@@ -58,9 +60,11 @@ function buildLegacyPluginSettingsItems(
       const typedPluginId = pluginId as Parameters<
         typeof getPluginSettingsStorage
       >[0];
+      const settingsStorage = getPluginSettingsStorage(typedPluginId);
+
       return {
-        storageItem: getPluginSettingsStorage(typedPluginId).storageItem,
-        settings,
+        storageItem: settingsStorage.storageItem,
+        settings: settingsStorage.normalizeValue(settings),
         meta: {},
       };
     });

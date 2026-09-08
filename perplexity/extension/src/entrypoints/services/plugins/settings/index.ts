@@ -7,6 +7,7 @@ import { create, type Draft } from "mutative";
 import { type z, type ZodObject } from "zod";
 
 import { migrateLegacyPluginSettings } from "@/entrypoints/services/data-migration/utils";
+import { sanitizePluginSettingsForPersonalProfile } from "@/entrypoints/services/plugins/personal-profile";
 import type {
   IPluginSettingsService,
   PluginSettingsMetadata,
@@ -27,18 +28,22 @@ export class PluginSettingsService<
   storageItem: WxtStorageItem<TValue, PluginSettingsMetadata<TMetadata>>;
 
   public id: PluginId;
+  public enforcePersonalProfileAllowlist: boolean;
 
   constructor({
     id,
     settingsSchemas,
     options,
+    enforcePersonalProfileAllowlist = true,
   }: {
     id: PluginId;
     settingsSchemas: PluginSettingsSchemas<TSchemasVersions>;
     options?: WxtStorageItemOptions<TValue>;
+    enforcePersonalProfileAllowlist?: boolean;
   }) {
     this.id = id;
     this.settingsSchemas = settingsSchemas;
+    this.enforcePersonalProfileAllowlist = enforcePersonalProfileAllowlist;
     this.storageItem = this.createStorageItem({ id, settingsSchemas, options });
   }
 
@@ -90,11 +95,13 @@ export class PluginSettingsService<
         });
 
         if (migrated != null) {
-          return migrated;
+          return this.normalizeValue(migrated);
         }
 
-        return settingsSchemas[latestVersion as keyof TSchemasVersions]
-          .fallback as TValue;
+        return this.normalizeValue(
+          settingsSchemas[latestVersion as keyof TSchemasVersions]
+            .fallback as TValue,
+        );
       },
       fallback: settingsSchemas[latestVersion as keyof TSchemasVersions]
         .fallback as TValue,
@@ -103,6 +110,12 @@ export class PluginSettingsService<
         ...options?.migrations,
       },
       ...options,
+    });
+  }
+
+  normalizeValue(value: TValue): TValue {
+    return sanitizePluginSettingsForPersonalProfile(this.id, value, {
+      enforceAllowlist: this.enforcePersonalProfileAllowlist,
     });
   }
 
@@ -115,7 +128,7 @@ export class PluginSettingsService<
   }
 
   async setValue(value: TValue): Promise<void> {
-    return this.storageItem.setValue(value);
+    return this.storageItem.setValue(this.normalizeValue(value));
   }
 
   async setMeta(meta: PluginSettingsMetadata<TMetadata>): Promise<void> {
@@ -127,7 +140,8 @@ export class PluginSettingsService<
   ): Promise<TValue> {
     const draft = await this.storageItem.getValue();
     const newSettings = create(draft, updateFn) as Awaited<TValue>;
-    await this.storageItem.setValue(newSettings);
-    return newSettings;
+    const normalizedSettings = this.normalizeValue(newSettings);
+    await this.storageItem.setValue(normalizedSettings);
+    return normalizedSettings;
   }
 }

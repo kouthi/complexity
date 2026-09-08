@@ -21,4 +21,5 @@ export const settingsStorage = new PluginSettingsService<
 >({
   id: "customTheme",
   settingsSchemas,
+  enforcePersonalProfileAllowlist: false,
 });

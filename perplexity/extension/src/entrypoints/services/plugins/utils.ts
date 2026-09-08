@@ -4,6 +4,7 @@ import {
   isPublicPlugin,
 } from "@/entrypoints/services/plugins/predicates";
 import type { PluginSettingsService } from "@/entrypoints/services/plugins/settings";
+import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import type { PluginsSettings } from "@/entrypoints/services/plugins/settings/types";
 import type {
   PluginId,
@@ -27,6 +28,16 @@ export function getPublicPluginManifests(): Record<
       isPublicPlugin(pluginId),
     ),
   ) as Record<PluginId, PublicPluginManifestExports>;
+}
+
+export function getPersonalProfilePublicPluginManifests(): Partial<
+  Record<PluginId, PublicPluginManifestExports>
+> {
+  return Object.fromEntries(
+    Object.entries(getPublicPluginManifests()).filter(([pluginId]) =>
+      isPersonalProfilePublicPlugin(pluginId),
+    ),
+  ) as Partial<Record<PluginId, PublicPluginManifestExports>>;
 }
 
 export function getPublicPluginManifest<const T extends PluginId>(

@@ -6,7 +6,7 @@ import type {
   PluginId,
   PluginManifestExports,
 } from "@/entrypoints/services/plugins/types";
-import { getPublicPluginManifests } from "@/entrypoints/services/plugins/utils";
+import { getPersonalProfilePublicPluginManifests } from "@/entrypoints/services/plugins/utils";
 
 type UseFilteredPluginsParams = {
   searchTerm: string;
@@ -24,7 +24,7 @@ export function useFilteredPlugins({
   "use memo";
 
   return (
-    Object.entries(getPublicPluginManifests()) as [
+    Object.entries(getPersonalProfilePublicPluginManifests()) as [
       PluginId,
       PluginManifestExports,
     ][]
