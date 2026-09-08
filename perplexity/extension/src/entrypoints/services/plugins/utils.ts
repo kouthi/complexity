@@ -1,10 +1,10 @@
 import { PluginsRegistryService } from "@/entrypoints/services/plugins";
+import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import {
   isPluginWithSettings,
   isPublicPlugin,
 } from "@/entrypoints/services/plugins/predicates";
 import type { PluginSettingsService } from "@/entrypoints/services/plugins/settings";
-import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import type { PluginsSettings } from "@/entrypoints/services/plugins/settings/types";
 import type {
   PluginId,

@@ -4,8 +4,8 @@ import type {
   FeatureCompatibility,
   PluginsEnableStates,
 } from "@/entrypoints/services/externals/cplx-api/plugins-states/types";
-import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import { PluginsRegistryService } from "@/entrypoints/services/plugins";
+import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import { isPublicPlugin } from "@/entrypoints/services/plugins/predicates";
 import type { PluginsSettingSnapshotsService } from "@/entrypoints/services/plugins/settings/snapshots";
 import type {
