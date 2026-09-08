@@ -21,6 +21,7 @@ export type IPluginSettingsService<
 > = {
   id: PluginId;
   storageItem: WxtStorageItem<TValue, PluginSettingsMetadata<TMetadata>>;
+  normalizeValue(value: TValue): TValue;
   getValue(): Promise<TValue>;
   getMeta(): Promise<PluginSettingsMetadata<TMetadata>>;
   setValue(value: TValue): Promise<void>;

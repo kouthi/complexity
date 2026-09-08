@@ -122,7 +122,12 @@ export class PluginsSettingSnapshotsService {
       )
         .filter(([pluginId]) => isPluginWithSettings(pluginId))
         .map(([pluginId, exports]) => {
-          return [pluginId, exports.settingsStorage?.storageItem.fallback];
+          return [
+            pluginId,
+            exports.settingsStorage?.normalizeValue(
+              exports.settingsStorage.storageItem.fallback,
+            ),
+          ];
         }),
     ) as PluginsSettings;
   }

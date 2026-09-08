@@ -4,6 +4,7 @@ import type {
   FeatureCompatibility,
   PluginsEnableStates,
 } from "@/entrypoints/services/externals/cplx-api/plugins-states/types";
+import { isPersonalProfilePublicPlugin } from "@/entrypoints/services/plugins/personal-profile";
 import { PluginsRegistryService } from "@/entrypoints/services/plugins";
 import { isPublicPlugin } from "@/entrypoints/services/plugins/predicates";
 import type { PluginsSettingSnapshotsService } from "@/entrypoints/services/plugins/settings/snapshots";
@@ -33,7 +34,9 @@ export async function initializeLocalEnableStates(
 
   for (const pluginId of getPluginIds()) {
     if (isPublicPlugin(pluginId)) {
-      localEnableStates[pluginId] = pluginSettingSnapshots[pluginId].enabled;
+      localEnableStates[pluginId] =
+        isPersonalProfilePublicPlugin(pluginId) &&
+        pluginSettingSnapshots[pluginId].enabled;
     } else {
       localEnableStates[pluginId] = true;
     }
